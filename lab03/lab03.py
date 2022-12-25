@@ -29,6 +29,13 @@ def ordered_digits(x):
 
     """
     "*** YOUR CODE HERE ***"
+    s = str(x)
+    for i in range(len(s)):
+        if(i==len(s)-1):
+            return True
+        if(int(s[i])>int(s[i+1])):
+                return False
+    return True
 
 
 def get_k_run_starter(n, k):
@@ -52,12 +59,12 @@ def get_k_run_starter(n, k):
     """
     i = 0
     final = None
-    while ____________________________:
-        while ____________________________:
-            ____________________________
-        final = ____________________________
-        i = ____________________________
-        n = ____________________________
+    while i<=k:
+        while n%10>1 and (n%10 > (n//10)%10):
+            n = n // 10
+        final = n % 10
+        i = i+1
+        n = n // 10
     return final
 
 
@@ -77,6 +84,12 @@ def make_repeater(func, n):
     5
     """
     "*** YOUR CODE HERE ***"
+    g = identity
+    i = 0
+    while(i<n):
+        g = composer(func,g)
+        i += 1
+    return g
 
 
 def composer(func1, func2):
@@ -95,6 +108,7 @@ def apply_twice(func):
     16
     """
     "*** YOUR CODE HERE ***"
+    return make_repeater(func,2)
 
 
 def div_by_primes_under(n):
@@ -109,12 +123,12 @@ def div_by_primes_under(n):
     False
     """
     checker = lambda x: False
-    i = ____________________________
-    while ____________________________:
+    i = 2
+    while i<=n:
         if not checker(i):
-            checker = ____________________________
-        i = ____________________________
-    return ____________________________
+            checker = (lambda f,i : lambda x : x%i==0 or f(x) )(checker, i)
+        i = i + 1
+    return checker
 
 
 def div_by_primes_under_no_lambda(n):
@@ -153,11 +167,13 @@ def successor(n):
 def one(f):
     """Church numeral 1: same as successor(zero)"""
     "*** YOUR CODE HERE ***"
+    return lambda x:f(x)
 
 
 def two(f):
     """Church numeral 2: same as successor(successor(zero))"""
     "*** YOUR CODE HERE ***"
+    return lambda x: f(f(x))
 
 
 three = successor(two)
@@ -176,7 +192,7 @@ def church_to_int(n):
     3
     """
     "*** YOUR CODE HERE ***"
-
+    return n(lambda x:x+1)(0)
 
 def add_church(m, n):
     """Return the Church numeral for m + n, for Church numerals m and n.
@@ -185,7 +201,7 @@ def add_church(m, n):
     5
     """
     "*** YOUR CODE HERE ***"
-
+    return lambda f: lambda x: m(f)(n(f)(x))
 
 def mul_church(m, n):
     """Return the Church numeral for m * n, for Church numerals m and n.
@@ -197,7 +213,7 @@ def mul_church(m, n):
     12
     """
     "*** YOUR CODE HERE ***"
-
+    return lambda f : m(n(f))
 
 def pow_church(m, n):
     """Return the Church numeral m ** n, for Church numerals m and n.
@@ -208,3 +224,4 @@ def pow_church(m, n):
     9
     """
     "*** YOUR CODE HERE ***"
+    return n(m)
